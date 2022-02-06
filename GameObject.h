@@ -10,7 +10,7 @@ public:
 	int width; 
 	int height; 
 
-	GameObject(const char* texturesheet, SDL_Renderer* ren, int x, int y, int w, int h); 
+	GameObject(const char* texturesheet, int x, int y, int w, int h); 
 	~GameObject(); 
 
 	void Update(); 

@@ -1,4 +1,4 @@
-# C++ Game
+# C++ SDL Game
 
 INFO:<br/>
 -Simple C++ Game

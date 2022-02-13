@@ -1,40 +1,21 @@
 #include "Map.h"
 #include "TextureManager.h"
+#include "Tile.h"
 
-int lvl1[20][25] = {
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,1,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,2,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,2,1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,1,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,1,2,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-};
-
-Map::Map()
+Map::Map(Tile* _tiles[], int _numOfTiles, int _map[20][25], int w, int h)
 {
-	dirt = TextureManager::LoadTexture("assets/dirt.png"); 
-	grass = TextureManager::LoadTexture("assets/grass.png"); 
-	water = TextureManager::LoadTexture("assets/water.png");
+	numOfTiles = _numOfTiles;
 
-	LoadMap(lvl1); 
+	for(int i = 0; i < numOfTiles; i++)
+	{
+		tiles[i] = _tiles[i]; 
+	}	
+
+	LoadMap(_map); 
 
 	src.x = src.y = 0; 
-	src.w = dest.w = 75; 
-	src.h = dest.h = 75; 
+	src.w = dest.w = w; 
+	src.h = dest.h = h; 
 
 	dest.x = dest.y = 0; 
 }
@@ -45,14 +26,14 @@ void Map::LoadMap(int arr[20][25])
 	{
 		for(int col = 0; col < 25; col++)
 		{
-			map[row][col] = arr[row][col]; 
+			map[row][col] = arr[row][col];
 		}
 	}
 }
 
 void Map::DrawMap()
 {
-	int type = 0; 
+	int type = -1; 
 
 	for(int row = 0; row < 20; row++)
 	{
@@ -63,20 +44,17 @@ void Map::DrawMap()
 			dest.x = col * 75; 
 			dest.y = row * 75; 	
 
-			switch(type)
+			for(int i = 0; i < numOfTiles; i++)
 			{
-				case 0:
-					TextureManager::Draw(water, src, dest);
-					break; 
-				case 1:
-					TextureManager::Draw(grass, src, dest); 
-					break; 
-				case 2:
-					TextureManager::Draw(dirt, src, dest); 	
-					break;
-				default:
+				
+				if(type == tiles[i]->getID())
+				{
+					TextureManager::Draw(tiles[i]->getTexture(), src, dest);
 					break; 	
+				}
+				 
 			}		
+	 	
 		}
 	}
 }

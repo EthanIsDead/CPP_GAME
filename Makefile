@@ -1,5 +1,5 @@
-output: main.o Game.o TextureManager.o GameObject.o Map.o  
-	 g++ -std=c++0x -Wall main.o Game.o TextureManager.o GameObject.o Map.o -lSDL2 -lSDL2_image -o output
+output: main.o Game.o TextureManager.o GameObject.o Map.o Tile.o 
+	 g++ -std=c++0x -Wall main.o Game.o TextureManager.o GameObject.o Map.o Tile.o -lSDL2 -lSDL2_image -o output
 
 main.o: main.cpp
 	 g++ -c main.cpp
@@ -16,4 +16,6 @@ GameObject.o: GameObject.cpp GameObject.h
 Map.o: Map.cpp Map.h
 	 g++ -c Map.cpp
 
+Tile.o: Tile.cpp Tile.h
+	 g++ -c Tile.cpp
 

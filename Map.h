@@ -6,17 +6,22 @@
 class Map
 {
 public:
-	Map(Tile* _tiles[], int numOfTiles, int _map[20][25], int w, int h); 
+	Map(std::vector<Tile*> _tiles, int* _map, int _mapRows, int _mapCols, int w, int h); 
 	~Map(); 
 
-	void LoadMap(int arr[20][25]); 
+	void LoadMap(int* arr); 
 	void DrawMap();  
 
 private:
 	SDL_Rect src, dest;
 
-	int map[20][25]; 
+	int* map; 
 	int numOfTiles;
-	Tile* tiles[]; 
-}; 
+	std::vector<Tile*> tiles;  
 
+	int tileWidth; 
+	int tileHeight;
+
+	int mapRows; 
+	int mapCols; 	
+}; 

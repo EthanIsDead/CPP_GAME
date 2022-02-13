@@ -42,6 +42,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else
 		isRunning = false;
 
+    //TEST ONE
 	player = new GameObject("assets/player.png", 0, 0, 150, 150);
 
 	SDL_Texture* dirt = TextureManager::LoadTexture("assets/dirt.png"); 
@@ -57,8 +58,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		{0,0,0,0,0,0,1,1,1,1,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,1,1,1,1,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,1,1,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,1,1,1,1,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,1,1,2,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,1,1,1,1,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,0,1,1,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -71,8 +72,23 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 	};
 
-	Tile* tmpTiles[] = { new Tile(2, dirt), new Tile(1, grass), new Tile(0, water) }; 
-	map = new Map(tmpTiles, 3, tilemap, 125, 125);
+	int tilemap_rows = 20; 
+	int tilemap_cols = 25; 
+
+	int* tilemap_dyn_arr = new int[tilemap_rows * tilemap_cols]; 
+
+	for(int i = 0; i < tilemap_rows; i++)
+	{
+		for(int j = 0; j < tilemap_cols; j++)
+		{
+			*(tilemap_dyn_arr + i * tilemap_cols + j) = tilemap[i][j]; 
+		}
+	}
+
+	std::vector<Tile*> tmpTiles{ new Tile(2, dirt), new Tile(1, grass), new Tile(0, water) }; 
+	map = new Map(tmpTiles, tilemap_dyn_arr, tilemap_rows, tilemap_cols, 100, 100);
+
+	//TEST TWO
 }
 
 void Game::handleEvents()
@@ -118,5 +134,3 @@ void Game::clean()
 }
 
 bool Game::running(){ return isRunning; }
-
-

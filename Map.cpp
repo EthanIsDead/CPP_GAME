@@ -2,16 +2,20 @@
 #include "TextureManager.h"
 #include "Tile.h"
 
-Map::Map(Tile* _tiles[], int _numOfTiles, int _map[20][25], int w, int h)
+Map::Map(std::vector<Tile*> _tiles, int* _map, int _mapRows, int _mapCols, int w, int h)
 {
-	numOfTiles = _numOfTiles;
-
-	for(int i = 0; i < numOfTiles; i++)
+	for(int i = 0; i < _tiles.size(); i++)
 	{
-		tiles[i] = _tiles[i]; 
+		tiles.push_back(_tiles[i]); 	
 	}	
 
+	mapRows = _mapRows; 
+	mapCols = _mapCols; 
+
 	LoadMap(_map); 
+
+	tileWidth = w; 
+	tileHeight = h; 
 
 	src.x = src.y = 0; 
 	src.w = dest.w = w; 
@@ -20,41 +24,40 @@ Map::Map(Tile* _tiles[], int _numOfTiles, int _map[20][25], int w, int h)
 	dest.x = dest.y = 0; 
 }
 
-void Map::LoadMap(int arr[20][25])
+void Map::LoadMap(int* arr)
 {
-	for(int row = 0; row < 20; row++)
+	map = new int[mapRows * mapCols]; 
+
+	for(int i = 0; i < mapRows; i++)
 	{
-		for(int col = 0; col < 25; col++)
+		for(int j = 0; j < mapCols; j++)
 		{
-			map[row][col] = arr[row][col];
+			*(map + i * mapCols + j) = *(arr + i * mapCols + j); 
 		}
 	}
 }
 
 void Map::DrawMap()
 {
-	int type = -1; 
-
-	for(int row = 0; row < 20; row++)
+	int type = -1;
+   	
+	for(int row = 0; row < mapRows; row++)
 	{
-		for(int col = 0; col < 25; col++)
+		for(int col = 0; col < mapCols; col++)
 		{
-			type = map[row][col];
+			type = *(map + row * mapCols + col); 
+			dest.x = col * tileWidth; 
+			dest.y = row * tileHeight; 	
 
-			dest.x = col * 75; 
-			dest.y = row * 75; 	
-
-			for(int i = 0; i < numOfTiles; i++)
+			for(int i = 0; i < tiles.size(); i++)
 			{
 				
 				if(type == tiles[i]->getID())
 				{
 					TextureManager::Draw(tiles[i]->getTexture(), src, dest);
 					break; 	
-				}
-				 
+				}	 
 			}		
-	 	
 		}
 	}
 }

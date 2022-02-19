@@ -4,7 +4,6 @@
 #include "Map.h"
 #include "Tile.h"
 
-#include "ECS.h"
 #include "Components.h"
 
 Map* map;

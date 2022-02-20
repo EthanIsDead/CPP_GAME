@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "Tile.h"
 
-#include "Components.h"
+#include "ECS/Components.h"
 
 Map* map;
 GameObject* player;

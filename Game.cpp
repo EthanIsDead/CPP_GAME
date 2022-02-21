@@ -7,6 +7,7 @@
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr; 
+SDL_Event Game::event; 
 
 Manager manager; 
 auto& player(manager.addEntity()); 
@@ -91,13 +92,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 	//TEST TWO
-	player.addComponent<PositionComponent>(300, 300);
+	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/player.png");
+	player.addComponent<KeyboardController>(); 
 }
 
 void Game::handleEvents()
 {
-	SDL_Event event; 
 	SDL_PollEvent(&event); 
 
 	switch(event.type)
@@ -112,10 +113,6 @@ void Game::handleEvents()
 
 void Game::update()
 {
-	//TEST TWO
-	player.getComponent<PositionComponent>().setPos(player.getComponent<PositionComponent>().x()+1, player.getComponent<PositionComponent>().y()+1);
-	//
-
 	manager.refresh(); 
 	manager.update(); 	
 }	

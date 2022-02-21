@@ -1,18 +1,15 @@
 #include "Game.h"
-#include "TextureManager.h"
-#include "GameObject.h"
 #include "Map.h"
 #include "Tile.h"
 
 #include "ECS/Components.h"
 
 Map* map;
-GameObject* player;
 
 SDL_Renderer* Game::renderer = nullptr; 
 
 Manager manager; 
-auto& player2(manager.addEntity()); 
+auto& player(manager.addEntity()); 
 
 Game::Game(){}
 
@@ -48,7 +45,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 
     //TEST ONE
-	player = new GameObject("assets/player.png", 0, 0, 150, 150);
 
 	SDL_Texture* dirt = TextureManager::LoadTexture("assets/dirt.png"); 
 	SDL_Texture* grass = TextureManager::LoadTexture("assets/grass.png"); 
@@ -59,7 +55,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		{0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-		{0,0,0,0,0,0,2,1,1,1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0},
+		{0,0,0,0,0,1,2,1,1,1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,0,2,1,1,1,1,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0},
 		{0,0,0,0,2,2,1,1,1,1,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0},
 		{2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,1,2,0,0,0,0,0,0,0,0},
@@ -93,9 +89,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	std::vector<Tile*> tmpTiles{ new Tile(2, dirt), new Tile(1, grass), new Tile(0, water) }; 
 	map = new Map(tmpTiles, tilemap_dyn_arr, tilemap_rows, tilemap_cols, 100, 100);
 
-	player2.addComponent<PositionComponent>(); 
 
 	//TEST TWO
+	player.addComponent<PositionComponent>(300, 300);
+	player.addComponent<SpriteComponent>("assets/player.png");
 }
 
 void Game::handleEvents()
@@ -115,19 +112,21 @@ void Game::handleEvents()
 
 void Game::update()
 {
-	player->Update(); 
-	manager.update(); 	
+	//TEST TWO
+	player.getComponent<PositionComponent>().setPos(player.getComponent<PositionComponent>().x()+1, player.getComponent<PositionComponent>().y()+1);
+	//
 
-	std::cout << player2.getComponent<PositionComponent>().x() << ", " << player2.getComponent<PositionComponent>().y() << std::endl; 
+	manager.refresh(); 
+	manager.update(); 	
 }	
 
 void Game::render()
 {
 	SDL_RenderClear(renderer); 
-	
+
 	//add stuff to render here
 	map->DrawMap(); 
-	player->Render(); 
+	manager.draw(); 
 
 	SDL_RenderPresent(renderer); 	
 }
